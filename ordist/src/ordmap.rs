@@ -4,11 +4,11 @@ use std::iter::FromIterator;
 use crate::error::OrDistError;
 use crate::traits::OrDistElement;
 
-pub struct OrdMap<K: OrDistElement>{
+pub struct OrdMap<K: OrDistElement> {
     pub data: HashMap<K, usize>,
 }
 
-impl<K: OrDistElement> FromIterator<K> for OrdMap<K>{
+impl<K: OrDistElement> FromIterator<K> for OrdMap<K> {
     fn from_iter<T: IntoIterator<Item = K>>(iter: T) -> Self {
         let mut data = HashMap::new();
         for (i, x) in iter.into_iter().enumerate() {
@@ -16,7 +16,7 @@ impl<K: OrDistElement> FromIterator<K> for OrdMap<K>{
         }
         Self { data }
     }
-} 
+}
 
 impl<K: OrDistElement> OrdMap<K> {
     pub fn get(&self, key: &K) -> usize {
@@ -26,7 +26,10 @@ impl<K: OrDistElement> OrdMap<K> {
     pub fn identical(&self, rhs: &Self) -> Result<(), OrDistError<K>> {
         let n = self.data.len();
         if n != rhs.data.len() {
-            return Err(OrDistError::DifferentLength { left: n, right: rhs.data.len()} );
+            return Err(OrDistError::DifferentLength {
+                left: n,
+                right: rhs.data.len(),
+            });
         }
         let mut key = HashSet::new();
         let mut val = vec![0; n];
@@ -34,7 +37,9 @@ impl<K: OrDistElement> OrdMap<K> {
             key.insert(k);
             if v >= n {
                 return Err(OrDistError::RankOutOfLength {
-                    length: n, rank: v, elem: k.clone()
+                    length: n,
+                    rank: v,
+                    elem: k.clone(),
                 });
             }
             if val[v] == 1 {
@@ -49,7 +54,9 @@ impl<K: OrDistElement> OrdMap<K> {
             }
             if v >= n {
                 return Err(OrDistError::RankOutOfLength {
-                    length: n, rank: v, elem: k.clone()
+                    length: n,
+                    rank: v,
+                    elem: k.clone(),
                 });
             }
             if val[v] == 0 {

@@ -5,16 +5,20 @@ use crate::distances::*;
 use crate::error::OrDistError;
 use crate::traits::OrDistElement;
 
-pub fn spearman_corrcoef<T: OrDistElement, U: Float>(v1: &[T], v2: &[T])
--> Result<U, OrDistError<T>> {
+pub fn spearman_corrcoef<T: OrDistElement, U: Float>(
+    v1: &[T],
+    v2: &[T],
+) -> Result<U, OrDistError<T>> {
     let d_spear = U::from(spearman_dist(v1, v2)?).unwrap();
     let m = U::from(v1.len()).unwrap();
     let one = U::one();
     Ok(one - U::from(6).unwrap() * d_spear / (m * (m * m - one)))
 }
 
-pub fn kendall_corrcoef<T: OrDistElement, U: Float>(v1: &[T], v2: &[T])
--> Result<U, OrDistError<T>> {
+pub fn kendall_corrcoef<T: OrDistElement, U: Float>(
+    v1: &[T],
+    v2: &[T],
+) -> Result<U, OrDistError<T>> {
     let d_ken = U::from(kendall_dist(v1, v2)?).unwrap();
     let m = U::from(v1.len()).unwrap();
     let one = U::one();

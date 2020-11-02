@@ -24,8 +24,8 @@ impl<T: OrDistElement> Shuffle for Vec<T> {
         let mut v = self.clone();
         v.shuffle_seed_inplace(random_seed);
         v
-    } 
-    
+    }
+
     fn shuffle_seed_into(&mut self, random_seed: u32) -> Self {
         self.shuffle_seed_inplace(random_seed);
         self.clone()

@@ -9,14 +9,14 @@ macro_rules! lcs_core {
         $v1:ident, $v2:ident,
         $n1:ident, $n2:ident
     ) => {
-        let mut $dp = Array2::zeros(($n1+1, $n2+1));
+        let mut $dp = Array2::zeros(($n1 + 1, $n2 + 1));
 
         for i1 in 0..$n1 {
             for i2 in 0..$n2 {
-                $dp[[i1+1, i2+1]] = if $v1[i1] == $v2[i2] {
+                $dp[[i1 + 1, i2 + 1]] = if $v1[i1] == $v2[i2] {
                     $dp[[i1, i2]] + 1
                 } else {
-                    max($dp[[i1+1, i2]], $dp[[i1, i2+1]])
+                    max($dp[[i1 + 1, i2]], $dp[[i1, i2 + 1]])
                 }
             }
         }

@@ -1,5 +1,5 @@
 use pyo3::prelude::*;
-use pyo3::types::{PyList};
+use pyo3::types::PyList;
 
 use ordist::{corrcoef, distances, lcs};
 
