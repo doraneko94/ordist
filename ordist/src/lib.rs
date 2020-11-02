@@ -1,0 +1,9 @@
+pub mod corrcoef;
+pub mod distances;
+pub mod error;
+pub mod lcs;
+pub mod ordmap;
+pub mod permutation;
+pub mod random;
+pub mod traits;
+pub mod utils;
