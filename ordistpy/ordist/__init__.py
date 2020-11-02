@@ -1,5 +1,5 @@
 import numpy as np
-from ordist import *
+from .ordist import *
 
 def parser(v1, v2, mode):
     global a, id1, id2, elem_to_id, id_to_elem
