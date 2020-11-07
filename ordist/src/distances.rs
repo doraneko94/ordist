@@ -1,3 +1,4 @@
+//! Order distances
 use ndarray::*;
 use std::cmp::min;
 
@@ -5,11 +6,15 @@ use crate::error::OrDistError;
 use crate::traits::OrDistElement;
 use crate::utils::*;
 
+/// Calculation mode in `spearman_footrule()`.
 pub enum ModeSF {
+    /// Calculating Spearman distance
     Spearman,
-    FootRule,
+    /// Calculating Footrule distance
+    Footrule,
 }
 
+/// The core function of Spearman & Footrule distance.
 pub fn spearman_footrule<K: OrDistElement>(
     v1: &[K],
     v2: &[K],
@@ -24,20 +29,33 @@ pub fn spearman_footrule<K: OrDistElement>(
             let r = sub_abs(r1, r2);
             match m {
                 ModeSF::Spearman => r * r,
-                ModeSF::FootRule => r,
+                ModeSF::Footrule => r,
             }
         })
         .sum())
 }
 
+/// Spearman distance between 2 orders.
+/// ```latex
+/// d_{Spear}(x,y) = \sum_{i=1}^{n}(r_{xi}-r_{yi})^{2}
+/// ```
+/// `r_{xi}` is the rank in `x` of element `i`.
 pub fn spearman_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDistError<K>> {
     spearman_footrule(v1, v2, ModeSF::Spearman)
 }
 
+/// Footrule distance between 2 orders.
+/// ```latex
+/// d_{Foot}(x,y) = \sum_{i=1}^{n}|r_{xi}-r_{yi}|
+/// ```
+/// `r_{xi}` is the rank in `x` of element `i`.
 pub fn footrule_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDistError<K>> {
-    spearman_footrule(v1, v2, ModeSF::FootRule)
+    spearman_footrule(v1, v2, ModeSF::Footrule)
 }
 
+/// Kendall distance between 2 orders.
+/// 
+/// The number of pairs of elements that are in mismatched order.
 pub fn kendall_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDistError<K>> {
     let (om1, om2) = ordmaps_identical(v1, v2)?;
     let keys: Vec<&&K> = om1.data.keys().collect();
@@ -71,6 +89,10 @@ pub fn kendall_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDis
         .sum())
 }
 
+/// Cayley distance between 2 orders.
+/// 
+/// The minimum number of procedures to exchange any element of `v2` 
+/// that is required to convert `v2` to `v1`.
 pub fn cayley_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDistError<K>> {
     let (_, mut om2) = ordmaps_identical_owned(v1, v2)?;
     let mut v2 = Vec::from(v2);
@@ -87,6 +109,14 @@ pub fn cayley_dist<K: OrDistElement>(v1: &[K], v2: &[K]) -> Result<usize, OrDist
     Ok(ans)
 }
 
+/// The core function of dynamic programming.
+/// 
+/// The value of dp[[i+1, j+1]] is the minimum value of
+/// ```
+/// dp[[i+1, j  ]] + 1
+/// dp[[i  , j+1]] + 1
+/// dp[[i  , j  ]] + rewrite_cost
+/// ```
 pub fn dp_core<T: OrDistElement>(v1: &[T], v2: &[T], rewrite_cost: usize) -> usize {
     let (n1, n2) = (v1.len(), v2.len());
     let mut dp = Array2::zeros((n1 + 1, n2 + 1));

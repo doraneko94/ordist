@@ -1,6 +1,6 @@
 [package]
 name    = "ordist"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["doraneko94 <shuntaro94@gmail.com>"]
 edition = "2018"
 
@@ -13,6 +13,9 @@ readme        = "README.md"
 categories    = ["algorithms", "science"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+doctest = false
 
 [dependencies]
 ndarray = "0.13.1"

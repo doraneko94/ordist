@@ -1,3 +1,5 @@
+//! Correlation coefficients based on order distance.
+
 use ndarray::*;
 use num_traits::Float;
 
@@ -5,6 +7,7 @@ use crate::distances::*;
 use crate::error::OrDistError;
 use crate::traits::OrDistElement;
 
+/// Spearman correlation coefficient between 2 orders.
 pub fn spearman_corrcoef<T: OrDistElement, U: Float>(
     v1: &[T],
     v2: &[T],
@@ -15,6 +18,7 @@ pub fn spearman_corrcoef<T: OrDistElement, U: Float>(
     Ok(one - U::from(6).unwrap() * d_spear / (m * (m * m - one)))
 }
 
+/// Kendall correlation coefficient between 2 orders.
 pub fn kendall_corrcoef<T: OrDistElement, U: Float>(
     v1: &[T],
     v2: &[T],
@@ -25,8 +29,11 @@ pub fn kendall_corrcoef<T: OrDistElement, U: Float>(
     Ok(one - U::from(4).unwrap() * d_ken / (m * (m - one)))
 }
 
+/// Trait of correlation coefficient
 pub trait OrDistCorrCoef<T: OrDistElement, U: Float> {
+    /// Spearman's correlation coefficient with `v`.
     fn spearman_corrcoef(&self, v: &Self) -> Result<U, OrDistError<T>>;
+    /// Kendall's correlation coefficient with `v`.
     fn kendall_corrcoef(&self, v: &Self) -> Result<U, OrDistError<T>>;
 }
 
